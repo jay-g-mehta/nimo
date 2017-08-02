@@ -187,5 +187,5 @@ vir_domain_event_type_detail_map = {
 
 
 def event_detail_to_str(event_type, event_detail):
-    type_detail_dict = vir_domain_event_type_detail_map.get(event_type, None)
+    type_detail_dict = vir_domain_event_type_detail_map.get(event_type, {})
     return type_detail_dict.get(event_detail, None)
