@@ -6,6 +6,7 @@ from oslo_config import cfg
 from oslo_log import log as logging
 
 from nimo import utils as nimo_utils
+from nimo import states as nimo_states
 
 
 CONF = cfg.CONF
@@ -21,7 +22,11 @@ def domain_lifecycle_event_callback(conn, dom, event, detail, opaque_userdata):
     * @detail: event specific detail information. int type.
     * @opaque: opaque user data
     '''
-    LOG.info("Event occured on domain: '%s'", dom.name())
+    LOG.info("Event type= '%s', detail= '%s' "
+             "occured on domain= '%s' UUID= '%s'",
+             nimo_states.event_type_to_str(event),
+             nimo_states.event_detail_to_str(event, detail),
+             dom.name(), dom.UUIDString())
     # Current thread = Thread libvirtEventLoop
 
 
