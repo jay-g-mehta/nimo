@@ -25,8 +25,7 @@ def wait_and_dispatch_queued_events(event_queued_notify_recv,
     while True:
         try:
             _c = None
-            for i in range(5):
-                LOG.debug("(block) reading from event_queued_notify_recv")
+            LOG.debug("(block) reading from event_queued_notify_recv")
 
             # this should block until writer sends msg on pipe
             _c = event_queued_notify_recv.read(1)
