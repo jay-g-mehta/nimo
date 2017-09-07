@@ -75,16 +75,15 @@ class VirtLifeCycleEvent(object):
         self.dom = dom
         self.event = event
         self.detail = detail
-        self.oapque = opaque
+        self.opaque = opaque
 
     def __repr__(self):
-        # TODO(jay): Print conn and other details
         ret = "Conn='%s'" % (
             self.conn.getURI() if self.conn is not None else None)
         ret = ret + " Domain='%s'" % (
             self.dom.UUIDString() if self.dom is not None else None)
-        ret = ret + " Event='%s'" % (nimo_states.event_type_to_str(self.event))
-        ret = ret + " Event Type='%s'" % (
+        ret = ret + " Event Type = '%s'" % (nimo_states.event_type_to_str(self.event))
+        ret = ret + " Event = '%s'" % (
             nimo_states.event_detail_to_str(self.event, self.detail))
 
         return ret

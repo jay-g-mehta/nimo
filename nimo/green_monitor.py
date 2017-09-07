@@ -1,6 +1,9 @@
+import eventlet
+# green the world
+eventlet.monkey_patch()
+
 import libvirt
 import reconn
-import time
 
 from oslo_config import cfg
 from oslo_log import log as logging
@@ -33,7 +36,7 @@ def init_nimo():
 
     nimo_callbacks.event_queued_notify_recv,\
         nimo_callbacks.event_queued_notify_send = \
-        nimo_utils.create_pipe()
+        nimo_utils.create_green_pipe()
 
 
 def nimo_main(nimo_mode):
@@ -42,8 +45,13 @@ def nimo_main(nimo_mode):
     # Start and run libvirt default event loop implementation
     nimo_virt_api.startVirEventLoop()
 
+    # In 'greenthread' nimo mode, not safe to call this,
+    # but it is safe here as green thread are not yet spawned.
+    # Lets log all native threads, before spawning green thread
     nimo_utils.log_native_threads()
 
+    # In 'greenthread' nimo mode, not safe to use LOG,
+    # but it is safe here as green thread are not yet spawned.
     LOG.info("Connecting to hypervisor using connection uri=%s",
              cfg.CONF.libvirt.uri)
     conn = libvirt.openReadOnly(cfg.CONF.libvirt.uri)
@@ -78,10 +86,11 @@ def nimo_main(nimo_mode):
 
         dispatcher_thread.join()
 
+        # This should be safe as green thread is dead
         LOG.error("Dispatcher thread exited.")
 
         # at this point, spin back up a dispatcher thread or exit process
-        time.sleep(1)
+        eventlet.sleep(1)
 
     else:
         # If connection with hypervisor breaks, exit.
@@ -92,8 +101,10 @@ def nimo_main(nimo_mode):
 
 
 def main():
-    '''When NIMO is to be run using all native threads'''
-    nimo_main('nativethread')
+    '''Creates green dispatcher, and, main & VirtEventLoop is native thread'''
+    # NOTE(jay): monkey_patch() should be called.
+    # All native threads, including main, are not safe to use LOG
+    nimo_main('greenthread')
 
 
 if __name__ == '__main__':

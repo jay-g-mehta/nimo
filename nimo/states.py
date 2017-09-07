@@ -22,7 +22,7 @@ def event_type_to_str(virtDomEventType):
     '''Returns str format of domain event type.
     Returns None for failures/unknown event types
     '''
-    return vir_domain_event_type.get(virtDomEventType, None)
+    return vir_domain_event_type.get(virtDomEventType)
 
 
 virDomainEventDefinedDetailType = {
