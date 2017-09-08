@@ -35,6 +35,8 @@ def init_nimo():
         nimo_callbacks.event_queued_notify_send = \
         nimo_utils.create_pipe()
 
+    nimo_event_actions.EventActionProcessCollector.clean()
+
 
 def nimo_main(nimo_mode):
     init_nimo()
