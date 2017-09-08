@@ -5,6 +5,8 @@ import reconn
 
 from oslo_log import log as logging
 
+from nimo import periodic_task as nimo_periodic_task
+
 
 LOG = logging.getLogger(__name__)
 
@@ -19,6 +21,7 @@ class EventActionProcessCollector(object):
         cls.__action_process_q.append((event, action_process))
 
     @classmethod
+    @nimo_periodic_task.periodic_task(30)
     def clean(cls):
         index = 0
         for iter_index in range(len(cls.__action_process_q)):

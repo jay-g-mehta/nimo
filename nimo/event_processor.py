@@ -27,10 +27,6 @@ def process_queued_events(event_q):
         event = event_q.get()
         act_on_event(event)
 
-    # TODO(jay): Make this periodic
-    # Clean up finished event process
-    nimo_event_actions.EventActionProcessCollector.clean()
-
 
 def wait_and_dispatch_queued_events(event_queued_notify_recv,
                                     event_q):
