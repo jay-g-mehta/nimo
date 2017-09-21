@@ -32,7 +32,7 @@ class VirtEventQueue(object):
     def maxsize(self):
         '''Return queue max size
         '''
-        return self.q.maxsize()
+        return self.q.maxsize
 
     def get(self, block=True, timeout=None):
         '''Remove and return next item from queue.
