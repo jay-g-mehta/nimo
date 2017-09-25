@@ -3,11 +3,13 @@ import multiprocessing
 import libvirt
 import reconn
 
+from oslo_config import cfg
 from oslo_log import log as logging
 
 from nimo import periodic_task as nimo_periodic_task
 
 
+CONF = cfg.CONF
 LOG = logging.getLogger(__name__)
 
 
@@ -74,7 +76,6 @@ class ReconnEventAction(EventAction):
     console.log file of the VM instance. Uses reconn
     module. A new daemon process is created to begin reconn.
     """
-    _reconn_config_file = '/etc/reconn/reconn.conf'
     _reconn_log_file = '/var/log/reconn/reconn.log'
     _reconn_msg_format = "{{'line':'{line}', " \
                          "'matched_pattern':'{matched_pattern}', " \
@@ -82,10 +83,13 @@ class ReconnEventAction(EventAction):
                          "'uuid':'{uuid}' }}"
 
     def __init__(self,
-                 config_file=_reconn_config_file,
+                 config_file=None,
                  log_file=_reconn_log_file,
                  msg_format=_reconn_msg_format):
-        self.reconn_config_file = config_file
+        if config_file is None:
+            self.reconn_config_file = CONF.reconn_config_path
+        else:
+            self.reconn_config_file = config_file
         self.reconn_log_file = log_file
         self.reconn_msg_format = msg_format
 
