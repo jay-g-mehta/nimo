@@ -82,7 +82,12 @@ def register_default_nimo_opts():
                         'Format is: '
                         '/path/to/nova/instances/{uuid}/console.log .'
                         '{uuid} will be substituted with nova instance'
-                        'uuid.'), ]
+                        'uuid.'),
+        cfg.StrOpt('reconn_config_path',
+                   default='/etc/reconn/reconn.conf',
+                   help='Path to reconn.conf, config file used by RECONN.'
+                        'Defaults to: /etc/reconn/reconn.conf'),
+    ]
     CONF.register_opts(nimo_default_opts)
 
 

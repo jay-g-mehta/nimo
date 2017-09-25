@@ -4,6 +4,7 @@ import ddt
 from nimo import test
 from nimo import periodic_task as nimo_periodic_task
 from nimo import event_actions as nimo_event_actions
+from nimo import utils as nimo_utils
 
 
 @ddt.ddt
@@ -95,6 +96,10 @@ class EventActionMapperTestCase(test.TestCase):
 
 
 class ReconnEventActionTestCase(test.TestCase):
+    def setUp(self):
+        super(ReconnEventActionTestCase, self).setUp()
+        nimo_utils.register_default_nimo_opts()
+
     @mock.patch('multiprocessing.Process')
     def test_execute(self, mock_multiprocessing_process):
         mock_process = mock.Mock()
