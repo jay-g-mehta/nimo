@@ -1,3 +1,4 @@
+import sys
 import libvirt
 import reconn
 import time
@@ -19,9 +20,9 @@ LOG = logging.getLogger(__name__)
 
 
 def init_nimo():
-    reconn.setup_reconn()
-
     nimo_utils.oslo_logger_config_setup()
+    LOG.info("NIMO started. Initializing now ...")
+    reconn.setup_reconn()
     nimo_utils.register_libvirt_opts()
     nimo_utils.register_default_nimo_opts()
 
@@ -52,7 +53,7 @@ def nimo_main(nimo_mode):
     if conn is None:
         LOG.error('Failed to open connection to uri=%s' %
                   cfg.CONF.libvirt.uri)
-        exit(1)
+        sys.exit(1)
 
     # Register a callback to receive notifications of domain lifecycle events
     # occurring on a connection
@@ -90,7 +91,7 @@ def nimo_main(nimo_mode):
         # TODO(jay): Ideally, terminate all threads and recall this main().
         LOG.error("connection to Host is broken. Exiting")
 
-        exit(1)
+        sys.exit(1)
 
 
 def main():
