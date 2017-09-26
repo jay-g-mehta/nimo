@@ -7,6 +7,7 @@ from oslo_config import cfg
 from oslo_log import log as logging
 
 from nimo import periodic_task as nimo_periodic_task
+from nimo import states as nimo_states
 
 
 CONF = cfg.CONF
@@ -49,6 +50,12 @@ class EventActionMapper(object):
             (libvirt.VIR_DOMAIN_EVENT_STARTED,
              libvirt.VIR_DOMAIN_EVENT_STARTED_BOOTED
              )] = ReconnEventAction()
+
+        LOG.info("NIMO monitoring for events: %s",
+                 nimo_states.event_detail_to_str(
+                     libvirt.VIR_DOMAIN_EVENT_STARTED,
+                     libvirt.VIR_DOMAIN_EVENT_STARTED_BOOTED
+                 ))
 
     @classmethod
     def get_action(cls, event_type, event_detail):
