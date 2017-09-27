@@ -84,10 +84,16 @@ class ReconnEventAction(EventAction):
     module. A new daemon process is created to begin reconn.
     """
     _reconn_log_file = '/var/log/reconn/reconn.log'
-    _reconn_msg_format = "{{'line':'{line}', " \
-                         "'matched_pattern':'{matched_pattern}', " \
-                         "'timestamp':'{timestamp}', " \
-                         "'uuid':'{uuid}' }}"
+    _reconn_msg_format = '''{{
+                             "event_type": "compute.instance.{name}",
+                             "priority": "INFO",
+                             "publisher_id": "nimo.j-g2s8-kilo-2-6549",
+                             "payload": {{
+                                "instance_id": "{uuid}"
+                             }},
+                             "line":"{line}",
+                             "matched_pattern": "{matched_pattern}",
+                             "timestamp": "{timestamp}" }}'''.replace(" ", "")
 
     def __init__(self,
                  config_file=None,
