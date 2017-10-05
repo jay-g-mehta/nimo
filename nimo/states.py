@@ -2,6 +2,9 @@ import libvirt
 
 # https://libvirt.org/html/libvirt-libvirt-domain.html#virDomainEventType
 
+LIBVIRT_VERSION = libvirt.getVersion()
+
+
 vir_domain_event_type = {
     libvirt.VIR_DOMAIN_EVENT_DEFINED: 'VIR_DOMAIN_EVENT_DEFINED',
     libvirt.VIR_DOMAIN_EVENT_UNDEFINED: 'VIR_DOMAIN_EVENT_UNDEFINED',
@@ -10,8 +13,6 @@ vir_domain_event_type = {
     libvirt.VIR_DOMAIN_EVENT_RESUMED: 'VIR_DOMAIN_EVENT_RESUMED',
     libvirt.VIR_DOMAIN_EVENT_STOPPED: 'VIR_DOMAIN_EVENT_STOPPED',
     libvirt.VIR_DOMAIN_EVENT_SHUTDOWN: 'VIR_DOMAIN_EVENT_SHUTDOWN',
-    libvirt.VIR_DOMAIN_EVENT_PMSUSPENDED: 'VIR_DOMAIN_EVENT_PMSUSPENDED',
-    libvirt.VIR_DOMAIN_EVENT_CRASHED: 'VIR_DOMAIN_EVENT_CRASHED',
     # The following are commented as not define for libvirt-python,
     # but are defined in libvirt c module
     # libvirt.VIR_DOMAIN_EVENT_LAST: 'VIR_DOMAIN_EVENT_LAST'
@@ -85,9 +86,6 @@ virDomainEventSuspendedDetailType = {
     libvirt.VIR_DOMAIN_EVENT_SUSPENDED_FROM_SNAPSHOT:
         'VIR_DOMAIN_EVENT_SUSPENDED_FROM_SNAPSHOT: '
         'Restored from paused snapshot',
-    libvirt.VIR_DOMAIN_EVENT_SUSPENDED_API_ERROR:
-        'VIR_DOMAIN_EVENT_SUSPENDED_API_ERROR: '
-        'suspended after failure during libvirt API call',
     # The following are commented as not define for libvirt-python,
     # but are defined in libvirt c module
     # libvirt.VIR_DOMAIN_EVENT_SUSPENDED_POSTCOPY:
@@ -154,11 +152,6 @@ virDomainEventShutdownDetailType = {
 }
 
 virDomainEventPMSuspendedDetailType = {
-    libvirt.VIR_DOMAIN_EVENT_PMSUSPENDED_MEMORY:
-        'VIR_DOMAIN_EVENT_PMSUSPENDED_MEMORY: '
-        'Guest was PM suspended to memory',
-    libvirt.VIR_DOMAIN_EVENT_PMSUSPENDED_DISK:
-        'VIR_DOMAIN_EVENT_PMSUSPENDED_DISK: Guest was PM suspended to disk',
     # The following are commented as not define for libvirt-python,
     # but are defined in libvirt c module
     # libvirt.VIR_DOMAIN_EVENT_PMSUSPENDED_LAST:
@@ -166,8 +159,6 @@ virDomainEventPMSuspendedDetailType = {
 }
 
 virDomainEventCrashedDetailType = {
-    libvirt.VIR_DOMAIN_EVENT_CRASHED_PANICKED:
-        'VIR_DOMAIN_EVENT_CRASHED_PANICKED: Guest was panicked',
     # The following are commented as not define for libvirt-python,
     # but are defined in libvirt c module
     # libvirt.VIR_DOMAIN_EVENT_CRASHED_LAST: 'VIR_DOMAIN_EVENT_CRASHED_LAST'
@@ -181,9 +172,51 @@ vir_domain_event_type_detail_map = {
     libvirt.VIR_DOMAIN_EVENT_RESUMED: virDomainEventResumedDetailType,
     libvirt.VIR_DOMAIN_EVENT_STOPPED: virDomainEventStoppedDetailType,
     libvirt.VIR_DOMAIN_EVENT_SHUTDOWN: virDomainEventShutdownDetailType,
-    libvirt.VIR_DOMAIN_EVENT_PMSUSPENDED: virDomainEventPMSuspendedDetailType,
-    libvirt.VIR_DOMAIN_EVENT_CRASHED: virDomainEventCrashedDetailType,
 }
+
+
+def _safe_updates():
+    """Safely add items only if libvirt supports events and event details"""
+    global vir_domain_event_type
+    global virDomainEventSuspendedDetailType
+    global virDomainEventPMSuspendedDetailType
+    global virDomainEventCrashedDetailType
+    global vir_domain_event_type_detail_map
+
+    if hasattr(libvirt, "VIR_DOMAIN_EVENT_PMSUSPENDED"):
+        vir_domain_event_type[
+            libvirt.VIR_DOMAIN_EVENT_PMSUSPENDED] = 'VIR_DOMAIN_EVENT_PMSUSPENDED'
+    if hasattr(libvirt, "VIR_DOMAIN_EVENT_CRASHED"):
+        vir_domain_event_type[
+            libvirt.VIR_DOMAIN_EVENT_CRASHED] = 'VIR_DOMAIN_EVENT_CRASHED'
+
+    if hasattr(libvirt, "VIR_DOMAIN_EVENT_SUSPENDED_API_ERROR"):
+        virDomainEventSuspendedDetailType[
+            libvirt.VIR_DOMAIN_EVENT_SUSPENDED_API_ERROR] = \
+            'VIR_DOMAIN_EVENT_SUSPENDED_API_ERROR: ' \
+            'suspended after failure during libvirt API call'
+
+    if hasattr(libvirt, "VIR_DOMAIN_EVENT_PMSUSPENDED_MEMORY"):
+        virDomainEventPMSuspendedDetailType[
+            libvirt.VIR_DOMAIN_EVENT_PMSUSPENDED_MEMORY] = \
+            'VIR_DOMAIN_EVENT_PMSUSPENDED_MEMORY: ' \
+            'Guest was PM suspended to memory'
+    if hasattr(libvirt, "VIR_DOMAIN_EVENT_PMSUSPENDED_DISK"):
+        virDomainEventPMSuspendedDetailType[
+            libvirt.VIR_DOMAIN_EVENT_PMSUSPENDED_DISK] = \
+            'VIR_DOMAIN_EVENT_PMSUSPENDED_DISK: Guest was PM suspended to disk'
+
+    if hasattr(libvirt, "VIR_DOMAIN_EVENT_CRASHED_PANICKED"):
+        virDomainEventCrashedDetailType[
+            libvirt.VIR_DOMAIN_EVENT_CRASHED_PANICKED] = \
+            'VIR_DOMAIN_EVENT_CRASHED_PANICKED: Guest was panicked'
+
+    if hasattr(libvirt, "VIR_DOMAIN_EVENT_PMSUSPENDED"):
+        vir_domain_event_type_detail_map[libvirt.VIR_DOMAIN_EVENT_PMSUSPENDED
+        ] = virDomainEventPMSuspendedDetailType
+    if hasattr(libvirt, "VIR_DOMAIN_EVENT_CRASHED"):
+        vir_domain_event_type_detail_map[
+            libvirt.VIR_DOMAIN_EVENT_CRASHED] = virDomainEventCrashedDetailType
 
 
 def event_detail_to_str(event_type, event_detail):
