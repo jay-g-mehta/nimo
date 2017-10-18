@@ -1,5 +1,7 @@
 from abc import ABCMeta, abstractmethod
+import socket
 import multiprocessing
+
 import libvirt
 import reconn
 
@@ -87,7 +89,7 @@ class ReconnEventAction(EventAction):
     _reconn_msg_format = '''{{
                              "event_type": "compute.instance.{name}",
                              "priority": "INFO",
-                             "publisher_id": "nimo.j-g2s8-kilo-2-6549",
+                             "publisher_id": "nimo.''' + socket.gethostname() + '''",
                              "payload": {{
                                 "instance_id": "{uuid}"
                              }},
