@@ -61,7 +61,12 @@ def nimo_main(nimo_mode):
                                 nimo_callbacks.domain_lifecycle_event_callback,
                                 {'prog': __file__, 'name': __name__})
 
-    conn.setKeepAlive(5, 3)
+    # Start sending keepalive messages after @interval seconds of inactivity
+    # and consider the connection to be broken when no response is received
+    # after @count keepalive messages sent in a row.
+    keep_alive_interval = 5
+    keep_alive_count = 3
+    conn.setKeepAlive(keep_alive_interval, keep_alive_count)
 
     dispatcher_thread = None
     dispatcher_thread_type = nimo_mode
