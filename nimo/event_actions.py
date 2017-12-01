@@ -76,7 +76,7 @@ class EventAction(object):
         pass
 
     @abstractmethod
-    def destroy(self,  *args, **kwargs):
+    def destroy(self, *args, **kwargs):
         pass
 
 
@@ -113,16 +113,17 @@ class ReconnEventAction(EventAction):
 
     def execute(self, target_file, user_data, *args, **kwargs):
         """Creates and returns a new daemon process which runs reconn."""
-        reconn_process = multiprocessing.Process(name='reconn_%s' % target_file,
-                                                 target=reconn.start_reconn,
-                                                 args=(target_file,
-                                                       self.reconn_config_file,
-                                                       self.reconn_log_file,
-                                                       self.reconn_msg_format,
-                                                       user_data))
+        reconn_process = multiprocessing.Process(
+            name='reconn_%s' % target_file,
+            target=reconn.start_reconn,
+            args=(target_file,
+                  self.reconn_config_file,
+                  self.reconn_log_file,
+                  self.reconn_msg_format,
+                  user_data))
         reconn_process.daemon = True
         reconn_process.start()
         return reconn_process
 
-    def destroy(self,  *args, **kwargs):
+    def destroy(self, *args, **kwargs):
         pass

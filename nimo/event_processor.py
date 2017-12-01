@@ -9,13 +9,16 @@ LOG = logging.getLogger(__name__)
 
 def act_on_event(event):
     LOG.debug("Acting on event: %s", event)
-    action = nimo_event_actions.EventActionMapper.get_action(event.event, event.detail)
+    action = nimo_event_actions.EventActionMapper.get_action(event.event,
+                                                             event.detail)
     if action is not None:
-        target_file = nimo_utils.form_reconn_target_file_path(event.dom.UUIDString())
+        target_file = nimo_utils.form_reconn_target_file_path(
+            event.dom.UUIDString())
         actor_process = action.execute(target_file,
                                        "uuid:%s" % event.dom.UUIDString())
 
-        nimo_event_actions.EventActionProcessCollector.add(event, actor_process)
+        nimo_event_actions.EventActionProcessCollector.add(event,
+                                                           actor_process)
 
 
 def process_queued_events(event_q):

@@ -1,14 +1,13 @@
 import six
 
+from oslo_log import log as logging
+
+from nimo import states as nimo_states
+
 if six.PY2:
     import Queue as native_queue
 else:
     import queue as native_queue
-
-
-from oslo_log import log as logging
-
-from nimo import states as nimo_states
 
 
 LOG = logging.getLogger(__name__)
@@ -82,7 +81,8 @@ class VirtLifeCycleEvent(object):
             self.conn.getURI() if self.conn is not None else None)
         ret = ret + " Domain='%s'" % (
             self.dom.UUIDString() if self.dom is not None else None)
-        ret = ret + " Event Type = '%s'" % (nimo_states.event_type_to_str(self.event))
+        ret = ret + " Event Type = '%s'" % (
+            nimo_states.event_type_to_str(self.event))
         ret = ret + " Event = '%s'" % (
             nimo_states.event_detail_to_str(self.event, self.detail))
 

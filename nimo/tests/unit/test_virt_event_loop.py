@@ -33,6 +33,7 @@ class NimoVirtEventLoopTestCase(test.TestCase):
         # virEventRunDefaultImpl() for 2 times and then raise StopIteration
         # to break the while loop
         mock_virEventRunDefaultImpl.side_effect = [True, True, StopIteration]
-        self.assertRaises(StopIteration, nimo_virt_api._runVirDefaultEventLoop,)
+        self.assertRaises(StopIteration,
+                          nimo_virt_api._runVirDefaultEventLoop, )
         mock_virEventRunDefaultImpl.assert_called_with()
         self.assertEqual(mock_virEventRunDefaultImpl.call_count, 3)
