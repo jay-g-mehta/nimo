@@ -4,6 +4,7 @@ import ddt
 from nimo import test
 from nimo import event_queue as nimo_event_queue
 
+
 @ddt.ddt
 class NimoEventQueueTestCase(test.TestCase):
 
@@ -18,7 +19,6 @@ class NimoEventQueueTestCase(test.TestCase):
         # verify qsize
         self.assertEqual(q_size, q.q.maxsize)
         self.assertEqual(q_size, q.maxsize())
-
 
     @ddt.data({'q_size': 2,
                'item': 1,

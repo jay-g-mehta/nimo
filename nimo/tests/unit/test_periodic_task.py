@@ -35,5 +35,6 @@ class PeriodicTaskTestCase(test.TestCase):
         mock_thread_args, mock_thread_kargs = mock_threadingThread.call_args
         self.assertRaises(KeyboardInterrupt,
                           mock_thread_kargs['target'],
-                          *mock_thread_kargs['args'], **mock_thread_kargs['kwargs']
+                          *mock_thread_kargs['args'],
+                          **mock_thread_kargs['kwargs']
                           )

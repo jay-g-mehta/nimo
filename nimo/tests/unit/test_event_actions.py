@@ -11,7 +11,7 @@ from nimo import utils as nimo_utils
 class EventActionProcessCollectorTestCase(test.TestCase):
     def tearDown(self):
         nimo_event_actions.EventActionProcessCollector.\
-                             _EventActionProcessCollector__action_process_q = []
+            _EventActionProcessCollector__action_process_q = []
         super(EventActionProcessCollectorTestCase, self).tearDown()
 
     def test_add(self):
@@ -20,19 +20,26 @@ class EventActionProcessCollectorTestCase(test.TestCase):
         nimo_event_actions.EventActionProcessCollector.add(
             event, action_process
         )
-        self.assertEqual((event, action_process),nimo_event_actions.
-                EventActionProcessCollector._EventActionProcessCollector__action_process_q[0])
+        self.assertEqual((event, action_process),
+                         nimo_event_actions.EventActionProcessCollector.
+                         _EventActionProcessCollector__action_process_q[0])
 
-    @ddt.data({'q': [(mock.Mock(name='mock_event_1'), mock.Mock(name='mock_process_action_1')),
-                     (mock.Mock(name='mock_event_2'), mock.Mock(name='mock_process_action_2')),
+    @ddt.data({'q': [(mock.Mock(name='mock_event_1'),
+                      mock.Mock(name='mock_process_action_1')),
+                     (mock.Mock(name='mock_event_2'),
+                      mock.Mock(name='mock_process_action_2')),
                      ],
                'dead_process_start_index': 1,
                'dead_process_end_index': 1,
                },
-              {'q': [(mock.Mock(name='mock_event_1'), mock.Mock(name='mock_process_action_1')),
-                     (mock.Mock(name='mock_event_2'), mock.Mock(name='mock_process_action_2')),
-                     (mock.Mock(name='mock_event_3'), mock.Mock(name='mock_process_action_3')),
-                     (mock.Mock(name='mock_event_4'), mock.Mock(name='mock_process_action_4')),
+              {'q': [(mock.Mock(name='mock_event_1'),
+                      mock.Mock(name='mock_process_action_1')),
+                     (mock.Mock(name='mock_event_2'),
+                      mock.Mock(name='mock_process_action_2')),
+                     (mock.Mock(name='mock_event_3'),
+                      mock.Mock(name='mock_process_action_3')),
+                     (mock.Mock(name='mock_event_4'),
+                      mock.Mock(name='mock_process_action_4')),
                      ],
                'dead_process_start_index': 1,
                'dead_process_end_index': 2,
@@ -45,19 +52,23 @@ class EventActionProcessCollectorTestCase(test.TestCase):
         self.patch(nimo_periodic_task, 'periodic_task', test.mask_decorator)
         reload(nimo_event_actions)
 
-        exp_q = q[: dead_process_start_index] + q[dead_process_end_index+1:]
-        dead_q = q[dead_process_start_index: dead_process_end_index+1]
+        exp_q = q[: dead_process_start_index] + q[dead_process_end_index + 1:]
+        dead_q = q[dead_process_start_index: dead_process_end_index + 1]
         for index in range(len(q)):
-            if index < dead_process_start_index or index > dead_process_end_index:
+            if (index < dead_process_start_index or
+                    index > dead_process_end_index):
                 q[index][1].is_alive.return_value = True
             else:
                 q[index][1].is_alive.return_value = False
-        nimo_event_actions.EventActionProcessCollector._EventActionProcessCollector__action_process_q = q
+        nimo_event_actions.EventActionProcessCollector.\
+            _EventActionProcessCollector__action_process_q = q
 
         nimo_event_actions.EventActionProcessCollector.clean()
 
-        self.assertEqual(exp_q, nimo_event_actions.
-                         EventActionProcessCollector._EventActionProcessCollector__action_process_q)
+        self.assertEqual(
+            exp_q,
+            nimo_event_actions.EventActionProcessCollector.
+            _EventActionProcessCollector__action_process_q)
 
         for index in range(len(q)):
             q[index][1].is_alive.assert_called_once_with()
@@ -66,14 +77,18 @@ class EventActionProcessCollectorTestCase(test.TestCase):
             dead_q[index][1].is_alive.assert_called_once_with()
             dead_q[index][1].join.assert_called_once_with()
 
-        self.patch(nimo_periodic_task, 'periodic_task', _orig_nimo_periodic_task.periodic_task)
+        self.patch(nimo_periodic_task, 'periodic_task',
+                   _orig_nimo_periodic_task.periodic_task)
         reload(nimo_event_actions)
+
 
 @ddt.ddt
 class EventActionMapperTestCase(test.TestCase):
 
-    @ddt.data({'event_type': nimo_event_actions.libvirt.VIR_DOMAIN_EVENT_STARTED,
-               'event_detail': nimo_event_actions.libvirt.VIR_DOMAIN_EVENT_STARTED_BOOTED,
+    @ddt.data({'event_type':
+               nimo_event_actions.libvirt.VIR_DOMAIN_EVENT_STARTED,
+               'event_detail':
+                   nimo_event_actions.libvirt.VIR_DOMAIN_EVENT_STARTED_BOOTED,
                'exp_result': mock.Mock(name='mock_reconn_action_instance'),
                },
               {'event_type': 'ANY EVENT TYPE',

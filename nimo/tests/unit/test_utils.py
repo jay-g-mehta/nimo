@@ -29,4 +29,3 @@ class NimoUtilTestCase(test.TestCase):
         nimo_cfg_opts = ['console_path']
         for opt in nimo_cfg_opts:
             self.assertIn(opt, CONF)
-

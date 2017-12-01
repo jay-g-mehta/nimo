@@ -185,7 +185,8 @@ def _safe_updates():
 
     if hasattr(libvirt, "VIR_DOMAIN_EVENT_PMSUSPENDED"):
         vir_domain_event_type[
-            libvirt.VIR_DOMAIN_EVENT_PMSUSPENDED] = 'VIR_DOMAIN_EVENT_PMSUSPENDED'
+            libvirt.VIR_DOMAIN_EVENT_PMSUSPENDED] = \
+            'VIR_DOMAIN_EVENT_PMSUSPENDED'
     if hasattr(libvirt, "VIR_DOMAIN_EVENT_CRASHED"):
         vir_domain_event_type[
             libvirt.VIR_DOMAIN_EVENT_CRASHED] = 'VIR_DOMAIN_EVENT_CRASHED'
@@ -212,8 +213,9 @@ def _safe_updates():
             'VIR_DOMAIN_EVENT_CRASHED_PANICKED: Guest was panicked'
 
     if hasattr(libvirt, "VIR_DOMAIN_EVENT_PMSUSPENDED"):
-        vir_domain_event_type_detail_map[libvirt.VIR_DOMAIN_EVENT_PMSUSPENDED
-        ] = virDomainEventPMSuspendedDetailType
+        vir_domain_event_type_detail_map[
+            libvirt.VIR_DOMAIN_EVENT_PMSUSPENDED] = \
+            virDomainEventPMSuspendedDetailType
     if hasattr(libvirt, "VIR_DOMAIN_EVENT_CRASHED"):
         vir_domain_event_type_detail_map[
             libvirt.VIR_DOMAIN_EVENT_CRASHED] = virDomainEventCrashedDetailType
