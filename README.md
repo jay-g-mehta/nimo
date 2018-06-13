@@ -1,5 +1,5 @@
 # NIMO
-NIMO is Nova Instance Monitoring tool.
+NIMO is Nova(Openstack project dealing with VM computes) Instance Monitoring tool.
 
 NIMO tracks life cycle events for every VM running on a hypervisor.
 On create, reboot events on a VM, NIMO will reconnaissance boot stages of that
@@ -10,6 +10,13 @@ get callbacks for VM instance life cycle events.
 NIMO makes use of reconn module to perform reconnaissance on console.log
 file of the VM.
 
+## Architecture
+The below architecture shows how NIMO interacts with hypervisor and sends out
+boot stages as RMQ messages. It also shows how existing project "Stacktack"
+can be used to consume messages and report all activities of in nice Web-UI or
+CLI "stacky"
+
+![](nimo_architecture.png)
 
 ## Download, Setup and Installing NIMO
 ```
